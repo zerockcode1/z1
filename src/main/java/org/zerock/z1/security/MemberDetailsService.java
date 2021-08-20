@@ -1,5 +1,7 @@
 package org.zerock.z1.security;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,9 +37,11 @@ public class MemberDetailsService implements UserDetailsService {
 
         Member member = result.orElseThrow(() -> new UsernameNotFoundException("NULL"));
 
-        return new MemberAuthDTO(member.getMid(),member.getMpw(),
-                member.getMemberRoleSet().stream().map(role -> new SimpleGrantedAuthority(role.name())).collect(Collectors.toList())
+        MemberAuthDTO memberAuthDTO =  new MemberAuthDTO(member.getMid(),member.getMpw(),
+                member.getMemberRoleSet().stream().map(role -> new SimpleGrantedAuthority("ROLE_"+role.name())).collect(Collectors.toList())
                 );
+
+        return memberAuthDTO;
     }
 
 }

@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.zerock.z1.security.filter.ApiCheckFilter;
 import org.zerock.z1.security.filter.ApiLoginFilter;
+import org.zerock.z1.security.util.JwtUtil;
 
 @Configuration
 @Log4j2
@@ -25,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         log.info("------------------configure-------------");
 
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        //http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
                         .antMatchers("/api/signup").permitAll();
@@ -42,17 +43,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public ApiCheckFilter apiCheckFilter() {
-        return new ApiCheckFilter("/api/movies/*");
+    public ApiCheckFilter apiCheckFilter()throws Exception{
+
+        ApiCheckFilter checkFilter = new ApiCheckFilter("/api/movies/*", jwtUtil(),authenticationManager());
+
+        return checkFilter;
     }
 
     @Bean
     public ApiLoginFilter apiLoginFilter()throws Exception {
+
         ApiLoginFilter apiLoginFilter =  new ApiLoginFilter("/api/login");
 
         apiLoginFilter.setAuthenticationManager(authenticationManager());
 
+        apiLoginFilter.setJwtUtil(jwtUtil());
+
         return apiLoginFilter;
+    }
+
+    @Bean
+    public JwtUtil jwtUtil(){
+        return new JwtUtil();
     }
 
 }

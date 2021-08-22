@@ -13,6 +13,7 @@ public interface MovieService {
     default MovieDTO entityToDTO(Movie movie){
 
         return MovieDTO.builder()
+                .mno(movie.getMno())
                 .title(movie.getTitle())
                 .poster(movie.getPoster())
                 .bookRate(movie.getBookRate())

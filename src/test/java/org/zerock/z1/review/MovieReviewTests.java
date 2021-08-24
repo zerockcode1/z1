@@ -4,6 +4,9 @@ import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.zerock.z1.movie.entity.Movie;
 import org.zerock.z1.review.entity.MovieReview;
 import org.zerock.z1.review.repository.MovieReviewRepository;
@@ -16,6 +19,19 @@ public class MovieReviewTests {
 
     @Autowired
     private MovieReviewRepository movieReviewRepository;
+
+    @Test
+    public void testList() {
+
+        Long mno = 1L;
+
+        Pageable pageable = PageRequest.of(0,10, Sort.by("rno").descending());
+
+        log.info(movieReviewRepository.findMovieReviewByMovie(Movie.builder().mno(mno).build(), pageable));
+
+
+
+    }
 
     @Test
     public void testInsertDummies() {

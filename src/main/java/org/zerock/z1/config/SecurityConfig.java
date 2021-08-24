@@ -10,9 +10,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.zerock.z1.security.filter.ApiCheckFilter;
 import org.zerock.z1.security.filter.ApiLoginFilter;
+import org.zerock.z1.security.handler.CustomAuthenticationEntryPoint;
 import org.zerock.z1.security.util.JwtUtil;
 
 @Configuration
@@ -29,7 +31,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         //http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests()
-                        .antMatchers("/api/signup").permitAll();
+                .antMatchers("/api/signup").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint());
+
         http.csrf().disable();
 
         http.addFilterBefore(apiCheckFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -45,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public ApiCheckFilter apiCheckFilter()throws Exception{
 
-        ApiCheckFilter checkFilter = new ApiCheckFilter("/api/movies/*", jwtUtil(),authenticationManager());
+        ApiCheckFilter checkFilter = new ApiCheckFilter("/api/movies/**/*", jwtUtil(),authenticationManager());
 
         return checkFilter;
     }
@@ -67,4 +73,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new JwtUtil();
     }
 
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint(){
+        return new CustomAuthenticationEntryPoint();
+    }
 }

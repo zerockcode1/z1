@@ -91,6 +91,7 @@ public class ApiCheckFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (Exception e) {
             e.printStackTrace();
+            throw new ServletException(e.getMessage());
         }
 
 

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.zerock.z1.movie.dto.MovieDTO;
 import org.zerock.z1.movie.service.MovieService;
 
+import javax.annotation.security.PermitAll;
 import java.util.List;
 
 @RestController
@@ -21,25 +22,28 @@ public class MovieController {
 
     private final MovieService movieService;
 
-    @PreAuthorize("isAuthenticated()")
+
+    @PreAuthorize("permitAll()")
     @GetMapping("/rank")
     public ResponseEntity<List<MovieDTO>> getAll(Authentication authentication){
 
         log.info("get...................all..............movies:" +authentication);
 
-        log.info(authentication.getAuthorities());
 
         return ResponseEntity.ok(movieService.getAllMovies());
 
     }
 
-    @PreAuthorize("hasRole('ROLE_C')")
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/rankLevel")
     public ResponseEntity<List<MovieDTO>> getAll2(Authentication authentication){
 
         log.info("get...................all..............movies:" +authentication);
 
         log.info(authentication.getAuthorities());
+        log.info(authentication.getPrincipal());
+
+        log.info("=============================");
 
         return ResponseEntity.ok(movieService.getAllMovies());
 

@@ -39,6 +39,7 @@ public interface MovieReviewService {
                 .reviewText(movieReview.getReviewText())
                 .reviewDate(movieReview.getReviewDate())
                 .score(movieReview.getScore())
+                .title(movieReview.getTitle())
                 .build();
 
 

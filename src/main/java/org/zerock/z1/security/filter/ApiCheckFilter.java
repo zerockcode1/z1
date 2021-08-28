@@ -57,7 +57,12 @@ public class ApiCheckFilter extends OncePerRequestFilter {
 
         String tokenValue = request.getHeader("Authorization");
 
-        log.info(tokenValue);
+        log.info("tokenValue: "+tokenValue);
+
+        if(tokenValue == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         try {
             //Bearer

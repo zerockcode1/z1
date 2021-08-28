@@ -2,6 +2,7 @@ package org.zerock.z1.review.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.z1.review.dto.MovieReviewDTO;
 import org.zerock.z1.review.dto.PageDTO;
@@ -13,12 +14,13 @@ import java.util.Map;
 
 @RestController
 @Log4j2
-@RequestMapping("/api/movies/reviews")
+@RequestMapping("/movies/reviews")
 @RequiredArgsConstructor
 public class MovieReviewController {
 
     private final MovieReviewService movieReviewService;
 
+    @PreAuthorize("permitAll()")
     @GetMapping("/{mno}")
     public PageResponseDTO getReviewsByMovie(@PathVariable("mno") Long mno, PageDTO pageDTO) {
 
@@ -30,6 +32,9 @@ public class MovieReviewController {
 
     @PostMapping("/")
     public Map<String, Long> register(@RequestBody MovieReviewDTO movieReviewDTO) {
+
+        log.info("----------------------------------------");
+        log.info(movieReviewDTO);
 
         Long rno = movieReviewService.register(movieReviewDTO);
 

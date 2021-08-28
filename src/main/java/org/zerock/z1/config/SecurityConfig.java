@@ -28,14 +28,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         log.info("------------------configure-------------");
 
-        //http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
 
+/*
         http.authorizeRequests()
                 .antMatchers("/api/signup").permitAll()
+                .antMatchers("/demo/*").permitAll()
                 .anyRequest().authenticated()
+
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint());
+*/
 
+        http.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint());
         http.csrf().disable();
 
         http.addFilterBefore(apiCheckFilter(), UsernamePasswordAuthenticationFilter.class);
